@@ -1,46 +1,64 @@
 package com.example.spycamsecurity.ui.newinstance
 
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.spycamsecurity.ui.newinstance.ui.theme.GraphSudokuTheme
+import androidx.appcompat.app.AppCompatActivity
+import com.example.spycamsecurity.R
 
-class NewInstanceActivity : ComponentActivity() {
+/**
+ * This feature is so simple that it is not even worth it to have a separate logic class
+ */
+class NewInstanceActivity : AppCompatActivity(), NewInstanceContainer {
+    private lateinit var logic: NewInstanceLogic
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val viewModel = NewGameViewModel()
+
         setContent {
             GraphSudokuTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+                NewGameScreen(
+                    onEventHandler = logic::onEvent,
+                    viewModel
+                )
             }
         }
-    }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+        logic = buildNewGameLogic(this, viewModel, applicationContext)
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GraphSudokuTheme {
-        Greeting("Android")
     }
+
+    override fun onStart() {
+        super.onStart()
+        logic.onEvent(NewGameEvent.OnStart)
+    }
+
+    override fun showError() = makeToast(getString(R.string.generic_error))
+
+    override fun onDoneClick() {
+        startActiveGameActivity()
+    }
+
+    /**
+     * I want the other feature to be completely restarted each time
+     */
+    override fun onBackPressed() {
+        startActiveGameActivity()
+    }
+
+    private fun startActiveGameActivity() {
+        startActivity(
+            Intent(
+                this,
+                ActiveGameActivity::class.java
+            ).apply {
+                this.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
+            }
+        )
+    }
+
 }

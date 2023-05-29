@@ -16,7 +16,12 @@
         android:theme="@style/Theme.SpyCamSecurity"
         tools:targetApi="31">
         <activity
-            android:name="com.example.spycamsecurity.ui.activeapp.ActiveAppActivity"
+            android:name="com.example.spycamsecurity.ui.newinstance.NewInstanceActivity"
+            android:exported="false"
+            android:label="@string/title_activity_new_instance"
+            android:theme="@style/Theme.SpyCamSecurity" />
+        <activity
+            android:name="com.example.spycamsecurity.ui.activeinstance.ActiveInstanceActivity"
             android:exported="true"
             android:label="@string/title_activity_active_app"
             android:theme="@style/Theme.SpyCamSecurity">
