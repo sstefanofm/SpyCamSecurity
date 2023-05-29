@@ -1,4 +1,4 @@
-package com.example.spycamsecurity.ui.activeapp.buildlogic
+package com.example.spycamsecurity.ui.activeinstance.buildlogic
 
 import android.content.Context
 import com.bracketcove.graphsudoku.common.ProductionDispatcherProvider

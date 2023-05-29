@@ -1,47 +1,9 @@
-package com.example.spycamsecurity.ui.activeapp
+package com.example.spycamsecurity.ui.activeinstance
 
-
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import com.bracketcove.graphsudoku.R
-import com.bracketcove.graphsudoku.common.toTime
-import com.bracketcove.graphsudoku.computationlogic.sqrt
-import com.bracketcove.graphsudoku.ui.*
-import com.bracketcove.graphsudoku.ui.newgame.AppToolbar
-
-/**
- * This enum represents different states which this feature of the user interface
- * can possess.
- *
- * The actual state is held in the ViewModel, but we will see how we can update our composable UI
- * by binding to the ViewModel's Function Types we created in the previous part of the tutorial
- */
-enum class ActiveGameScreenState {
+enum class ActiveAppScreenState {
     LOADING,
-    ACTIVE,
-    COMPLETE
+    WATCHING,
+    NOT_WATCHING
 }
 
 /**
@@ -52,13 +14,13 @@ enum class ActiveGameScreenState {
  *
  */
 @Composable
-fun ActiveGameScreen(
+fun ActiveAppScreen(
     //The event handler Function Type reference is how we call back to the Presentation Logic when
     //the user interacts with the application. It must be passed down to any composable which has
     //such interactions.
-    onEventHandler: (ActiveGameEvent) -> Unit,
+    onEventHandler: (ActiveInstanceEvent) -> Unit,
     //We also pass in the ViewModel which is how we actually give the data to our UI
-    viewModel: ActiveGameViewModel
+    viewModel: ActiveInstanceViewModel
 ) {
 
     //In very simple language, whenever we have some kind of data, or state, which may change at
@@ -68,7 +30,7 @@ fun ActiveGameScreen(
         //Now, MutableTransitionState is used specifically for animations here, so don't use this
         //everywhere. We will see a more general purpose example of remembered state later on.
         MutableTransitionState(
-            ActiveGameScreenState.LOADING
+            ActiveAppScreenState.LOADING
         )
     }
 
@@ -93,19 +55,19 @@ fun ActiveGameScreen(
         //instructions, which is great for someone like me who sucks at arithmetic.
         transitionSpec = { tween(durationMillis = 300) }
     ) {
-        if (it == ActiveGameScreenState.LOADING) 1f else 0f
+        if (it == ActiveAppScreenState.LOADING) 1f else 0f
     }
 
-    val activeAlpha by transition.animateFloat(
+    val watchingAlpha by transition.animateFloat(
         transitionSpec = { tween(durationMillis = 300) }
     ) {
-        if (it == ActiveGameScreenState.ACTIVE) 1f else 0f
+        if (it == ActiveAppScreenState.WATCHING) 1f else 0f
     }
 
-    val completeAlpha by transition.animateFloat(
+    val notWatchingAlpha by transition.animateFloat(
         transitionSpec = { tween(durationMillis = 300) }
     ) {
-        if (it == ActiveGameScreenState.COMPLETE) 1f else 0f
+        if (it == ActiveAppScreenState.NOT_WATCHING) 1f else 0f
     }
 
     //One option for compose, is to use a Scaffold as a skeleton for your UI. I personally prefer
@@ -122,7 +84,7 @@ fun ActiveGameScreen(
             title = stringResource(R.string.app_name),
         ) {
             //we will create this later of course
-            NewGameIcon(onEventHandler = onEventHandler)
+            NewInstanceIcon(onEventHandler = onEventHandler)
         }
 
         //Below the toolbar, we have the main content of this Screen, which can have three different

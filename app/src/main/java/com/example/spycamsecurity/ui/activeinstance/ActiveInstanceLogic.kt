@@ -1,4 +1,4 @@
-package com.example.spycamsecurity.ui.activeapp
+package com.example.spycamsecurity.ui.activeinstance
 
 
 import com.example.spycamsecurity.common.BaseLogic
