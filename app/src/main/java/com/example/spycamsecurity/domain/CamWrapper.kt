@@ -1,7 +1,7 @@
 package com.example.spycamsecurity.domain
 
 data class CamWrapper(
-    val url: String,
+    var url: String,
     val userType: UserType,
-    val camera: Camera
+    val camera: Camera = Camera()
 )

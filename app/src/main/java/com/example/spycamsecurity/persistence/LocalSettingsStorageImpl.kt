@@ -1,34 +1,31 @@
 package com.example.spycamsecurity.persistence
 
-import android.util.Log
-import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.Serializer
 import com.example.spycamsecurity.AppSettings
-import com.example.spycamsecurity.domain.ISettingsStorage
 import com.example.spycamsecurity.domain.Settings
+import com.example.spycamsecurity.domain.ISettingsStorage
 import com.example.spycamsecurity.domain.SettingsStorageResult
 import com.example.spycamsecurity.domain.UserType
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import com.google.protobuf.InvalidProtocolBufferException
 import kotlinx.coroutines.flow.first
-import java.io.InputStream
-import java.io.OutputStream
+import kotlinx.coroutines.withContext
 
-/* AppSettings is a class created for Proto Datastore */
+/**
+ * Note: AppSettings is a class generated for Proto Datastore
+ */
 class LocalSettingsStorageImpl(
     private val dataStore: DataStore<AppSettings>
 ) : ISettingsStorage {
     override suspend fun getSettings(): SettingsStorageResult =
         withContext(Dispatchers.IO) {
             try {
-                val appSettings = dataStore.data.first()
-                SettingsStorageResult.OnSuccess(appSettings.toSettings)
+                val gameSettings = dataStore.data.first()
+                SettingsStorageResult.OnSuccess(gameSettings.toSettings)
             } catch (e: Exception) {
                 SettingsStorageResult.OnError(e)
             }
         }
+
 
     override suspend fun updateSettings(settings: Settings): SettingsStorageResult =
         withContext(Dispatchers.IO) {
@@ -60,7 +57,7 @@ private val AppSettings.ProtoUserType.toDomain: UserType
     }
 
 private val UserType.toProto: AppSettings.ProtoUserType
-    get() =  when (this) {
+    get() = when (this) {
         UserType.SERVER -> AppSettings.ProtoUserType.SERVER
         UserType.CLIENT -> AppSettings.ProtoUserType.CLIENT
     }
