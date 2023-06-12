@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/ViewClients">
+
+    <fragment
+        android:id="@+id/ViewClients"
+        android:name="com.spycam.security.ViewClients"
+        android:label="@string/view_clients_label"
+        tools:layout="@layout/view_clients">
+
+        <action
+            android:id="@+id/action_ViewClients_to_EditClients"
+            app:destination="@id/EditClients" />
+    </fragment>
+    <fragment
+        android:id="@+id/EditClients"
+        android:name="com.spycam.security.EditClients"
+        android:label="@string/edit_clients_label"
+        tools:layout="@layout/edit_clients">
+
+        <action
+            android:id="@+id/action_EditClients_to_ViewClients"
+            app:destination="@id/ViewClients" />
+    </fragment>
+</navigation>
